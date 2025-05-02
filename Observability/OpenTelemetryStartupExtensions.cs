@@ -7,6 +7,12 @@ namespace Observability;
 
 public static class OpenTelemetryStartupExtensions
 {
+    /// <summary>
+    /// OpenTelemetry tracing extension method to add to 
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="serviceName">The name of the microservice</param>
+    /// <returns></returns>
     public static OpenTelemetryBuilder AddOpenTelementryTracing(this IServiceCollection services, string serviceName)
     {
         return services.AddOpenTelementryTracing(serviceName)
