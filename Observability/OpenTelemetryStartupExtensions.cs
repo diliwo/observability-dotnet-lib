@@ -12,10 +12,11 @@ public static class OpenTelemetryStartupExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <param name="serviceName">The name of the microservice</param>
+    /// /// <param name="customTracing">Allow servvices to use SQL instrumentation/param>
     /// <returns></returns>
-    public static OpenTelemetryBuilder AddOpenTelementryTracing(this IServiceCollection services, string serviceName)
+    public static OpenTelemetryBuilder AddOpenTelemetryTracing(this IServiceCollection services, string serviceName, Action<TracerProviderBuilder>? customTracing = null)
     {
-        return services.AddOpenTelementryTracing(serviceName)
+        return services.AddOpenTelemetry()
             .ConfigureResource(r => 
                 r.AddService(serviceName))
             .WithTracing(builder =>
@@ -23,6 +24,12 @@ public static class OpenTelemetryStartupExtensions
                 builder
                     .AddConsoleExporter() // Export to the console
                     .AddAspNetCoreInstrumentation();
+
+                customTracing?.Invoke(builder);
             }); //Configuration of the trace provider
     }
+
+    //For service that needs the SQL Instrumentation
+    public static TracerProviderBuilder WithSqlInstrumentation(this TracerProviderBuilder builder) =>
+        builder.AddSqlClientInstrumentation();
 }
