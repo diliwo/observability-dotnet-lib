@@ -12,9 +12,12 @@ public static class OpenTelemetryStartupExtensions
     /// </summary>
     /// <param name="services"></param>
     /// <param name="serviceName">The name of the microservice</param>
-    /// /// <param name="customTracing">Allow servvices to use SQL instrumentation/param>
+    /// /// <param name="customTracing">Allow services to contionally use SQL instrumentation</param>
     /// <returns></returns>
-    public static OpenTelemetryBuilder AddOpenTelemetryTracing(this IServiceCollection services, string serviceName, Action<TracerProviderBuilder>? customTracing = null)
+    public static OpenTelemetryBuilder AddOpenTelemetryTracing(
+        this IServiceCollection services,
+        string serviceName,
+        Action<TracerProviderBuilder>? customTracing = null)
     {
         return services.AddOpenTelemetry()
             .ConfigureResource(r => 
