@@ -2,8 +2,9 @@
 using OpenTelemetry;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Zeka.Extensions.Observability.RabbitMq;
 
-namespace Observability;
+namespace Zeka.Extensions.Observability;
 
 public static class OpenTelemetryStartupExtensions
 {
@@ -20,13 +21,15 @@ public static class OpenTelemetryStartupExtensions
         Action<TracerProviderBuilder>? customTracing = null)
     {
         return services.AddOpenTelemetry()
-            .ConfigureResource(r => 
+            .ConfigureResource(r =>
                 r.AddService(serviceName))
             .WithTracing(builder =>
             {
                 builder
                     .AddConsoleExporter() // Export to the console
-                    .AddAspNetCoreInstrumentation();
+                    .AddAspNetCoreInstrumentation()
+                    // Add RabbitMQ custom activity source for distributed tracing
+                    .AddSource(RabbitMqTelemetry.ActivitySourceName);
 
                 customTracing?.Invoke(builder);
             }); //Configuration of the trace provider
